@@ -1,0 +1,33 @@
+*vendorlib.nvim.txt*
+
+==============================================================================
+Lua module: vendorlib                               *vendorlib.nvim-vendorlib*
+
+install({path})                                          *vendorlib.install()*
+  Install specified libraries.
+
+  Parameters: ~
+    {path} (string) vendor spec file path
+
+==============================================================================
+EXAMPLES                                             *vendorlib.nvim-EXAMPLES*
+
+>
+  local vendor_spec_file_path = vim.fn.tempname()
+  local f = io.open(vendor_spec_file_path, "w")
+  f:write([[
+  return {
+    plugin_name = "example",
+    targets = {
+      {
+        from = { names = { "message", "collection/ordered_dict" } },
+      }
+    }
+  }]])
+  f:close()
+
+  require("vendorlib").install(vendor_spec_file_path)
+<
+
+==============================================================================
+vim:tw=78:ts=8:ft=help
