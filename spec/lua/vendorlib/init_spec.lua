@@ -10,7 +10,6 @@ describe("vendorlib.install()", function()
     local f = io.open(path, "w")
     f:write(([[
 return {
-  plugin_name = "test",
   targets = {
     {
       from = { names = { "message" } },
@@ -23,7 +22,7 @@ return {
 ]]):format(helper.test_data_dir))
     f:close()
 
-    vendorlib.install(path)
+    vendorlib.install("test", path)
 
     assert.exists_file("test/message.lua")
   end)

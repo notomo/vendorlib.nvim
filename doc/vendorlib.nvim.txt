@@ -3,10 +3,11 @@
 ==============================================================================
 Lua module: vendorlib                               *vendorlib.nvim-vendorlib*
 
-install({path})                                          *vendorlib.install()*
+install({plugin_name}, {path})                           *vendorlib.install()*
   Install specified libraries.
 
   Parameters: ~
+    {plugin_name} (string) plugin name (used as `lua/{plugin_name}` directory name)
     {path} (string) vendor spec file path
 
 ==============================================================================
@@ -17,7 +18,6 @@ EXAMPLES                                             *vendorlib.nvim-EXAMPLES*
   local f = io.open(vendor_spec_file_path, "w")
   f:write([[
   return {
-    plugin_name = "example",
     targets = {
       {
         from = { names = { "message", "collection/ordered_dict" } },
@@ -26,7 +26,7 @@ EXAMPLES                                             *vendorlib.nvim-EXAMPLES*
   }]])
   f:close()
 
-  require("vendorlib").install(vendor_spec_file_path)
+  require("vendorlib").install("example", vendor_spec_file_path)
 <
 
 ==============================================================================
