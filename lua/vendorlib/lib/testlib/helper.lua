@@ -2,6 +2,7 @@ local plugin_name = vim.split((...):gsub("%.", "/"), "/", true)[1]
 local helper = require("vusted.helper")
 
 helper.root = helper.find_plugin_root(plugin_name)
+helper.runtimepath = vim.o.runtimepath
 
 function helper.before_each()
   helper.test_data_path = "spec/test_data/" .. math.random(1, 2 ^ 30) .. "/"
