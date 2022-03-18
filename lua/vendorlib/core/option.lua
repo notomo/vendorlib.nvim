@@ -1,9 +1,16 @@
+local messagelib = require("vendorlib.vendor.message")
+
 local M = {}
 
 M.default = {
   to = function(ctx, module)
     return ("lua/%s/vendor/%s"):format(ctx.plugin_name, module.lua_path)
   end,
+  logger = {
+    info = function(msg)
+      messagelib.info(msg)
+    end,
+  },
 }
 
 function M.new(raw_opts)

@@ -12,8 +12,8 @@ function Specification.from(path)
   return setmetatable(tbl, Specification)
 end
 
-function Specification.install(self, plugin_name, to)
-  local ctx = Context.new(plugin_name)
+function Specification.install(self, plugin_name, logger, to)
+  local ctx = Context.new(plugin_name, logger)
   return self._targets:install(ctx, to)
 end
 

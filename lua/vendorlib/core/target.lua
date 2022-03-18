@@ -43,6 +43,8 @@ function VendorTarget.install(self, ctx, to)
     return ("failed to copy file: `%s` to `%s`"):format(self._file_path, path)
   end
 
+  ctx.logger.info("installed: " .. path)
+
   return nil
 end
 
