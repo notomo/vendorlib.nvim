@@ -5,18 +5,18 @@ function VendorTargets.new(raw_targets)
   vim.validate({ raw_targets = { raw_targets, "table" } })
   local tbl = {
     _targets = vim.tbl_map(function(raw_target)
-      return require("vendorlib.core.target").new(raw_target.from, raw_target.to)
+      return require("vendorlib.core.target").new(raw_target)
     end, raw_targets),
   }
   return setmetatable(tbl, VendorTargets)
 end
 
-function VendorTargets.install(self, ctx)
+function VendorTargets.install(self, ctx, to)
   vim.validate({ ctx = { ctx, "table" } })
 
   local errs = {}
   for _, target in ipairs(self._targets) do
-    local err = target:install(ctx)
+    local err = target:install(ctx, to)
     if err then
       table.insert(errs, err)
     end

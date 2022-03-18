@@ -10,20 +10,17 @@ describe("vendorlib.install()", function()
     local f = io.open(path, "w")
     f:write(([[
 return {
-  targets = {
-    {
-      from = { names = { "message" } },
-      to = function(ctx, from)
-        return "%s" .. ctx.plugin_name .. "/" .. from.name .. ".lua"
-      end
-    }
-  }
+  "lua/vendorlib/testdata/example.lua"
 }
 ]]):format(helper.test_data_dir))
     f:close()
 
-    vendorlib.install("test", path)
+    vendorlib.install("test", path, {
+      to = function(ctx, module)
+        return helper.test_data_dir .. ("%s/vendor/%s"):format(ctx.plugin_name, module.lua_path)
+      end,
+    })
 
-    assert.exists_file("test/message.lua")
+    assert.exists_file("test/vendor/testdata/example.lua")
   end)
 end)

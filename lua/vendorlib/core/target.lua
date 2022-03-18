@@ -1,39 +1,48 @@
 local VendorTarget = {}
 VendorTarget.__index = VendorTarget
 
-function VendorTarget.new(from, to)
+function VendorTarget.new(raw_target)
   vim.validate({
-    from = { from, "table" },
-    to = { to, "function", true },
+    raw_target = { raw_target, { "string" } },
   })
-
-  local modules = require("vendorlib.core.modules").new()
-  if from.names then
-    modules = modules:add_names(from.names)
+  local file_path = vim.api.nvim_get_runtime_file("**/" .. raw_target, false)[1]
+  if not file_path then
+    return "not found target: " .. raw_target
   end
 
+  local module_path = vim.split(file_path, "/lua/")[2]
+  local parts = vim.split(module_path, "/", true)
+  local lua_path = table.concat({ unpack(parts, 2) }, "/")
+
   local tbl = {
-    _modules = modules,
-    _to = to or function(ctx, module)
-      return ("lua/%s/vendor/%s.lua"):format(ctx.plugin_name, module.name)
-    end,
+    _file_path = file_path,
+    _lua_path = lua_path,
   }
   return setmetatable(tbl, VendorTarget)
 end
 
-function VendorTarget.install(self, ctx)
-  vim.validate({ ctx = { ctx, "table" } })
-  local errs = {}
-  local raw_modules = self._modules:all()
-  for _, module in ipairs(raw_modules) do
-    local err = module:install(ctx, self._to)
-    if err then
-      table.insert(errs, err)
-    end
+function VendorTarget.install(self, ctx, to)
+  vim.validate({
+    ctx = { ctx, "table" },
+    to = { to, "function" },
+  })
+
+  local path = to(ctx, {
+    file_path = self._file_path,
+    lua_path = self._lua_path,
+  })
+
+  local dir = vim.fn.fnamemodify(path, ":h")
+  local ok = vim.fn.mkdir(dir, "p")
+  if ok ~= 1 then
+    return ("failed to mkdir: `%s`"):format(dir)
   end
-  if #errs > 0 then
-    return table.concat(errs, "\n")
+
+  local copied = vim.loop.fs_copyfile(self._file_path, path)
+  if copied ~= true then
+    return ("failed to copy file: `%s` to `%s`"):format(self._file_path, path)
   end
+
   return nil
 end
 
