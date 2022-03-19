@@ -1,4 +1,4 @@
-local helper = require("vendorlib.lib.testlib.helper")
+local helper = require("vendorlib.test.helper")
 local vendorlib = helper.require("vendorlib")
 
 describe("vendorlib.install()", function()
@@ -10,7 +10,7 @@ describe("vendorlib.install()", function()
     local f = io.open(path, "w")
     f:write(([[
 return {
-  "lua/vendorlib/testdata/example.lua"
+  "lua/vendorlib/test/data/example.lua"
 }
 ]]):format(helper.test_data_dir))
     f:close()
@@ -21,6 +21,6 @@ return {
       end,
     })
 
-    assert.exists_file("test/vendor/testdata/example.lua")
+    assert.exists_file("test/vendor/test/data/example.lua")
   end)
 end)
