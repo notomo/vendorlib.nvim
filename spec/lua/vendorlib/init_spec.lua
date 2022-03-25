@@ -21,6 +21,6 @@ return {
       end,
     })
 
-    assert.exists_file("test/vendor/test/data/example.lua")
+    assert.exists_file("test/vendor/vendorlib/test/data/example.lua")
   end)
 end)

@@ -1,4 +1,4 @@
-local messagelib = require("vendorlib.vendor.message")
+local messagelib = require("vendorlib.vendor.misclib.message")
 
 local M = {}
 

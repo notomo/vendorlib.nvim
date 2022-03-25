@@ -10,13 +10,9 @@ function VendorTarget.new(raw_target)
     return "not found target: " .. raw_target
   end
 
-  local module_path = vim.split(file_path, "/lua/")[2]
-  local parts = vim.split(module_path, "/", true)
-  local lua_path = table.concat({ unpack(parts, 2) }, "/")
-
   local tbl = {
     _file_path = file_path,
-    _lua_path = lua_path,
+    _lua_path = vim.split(file_path, "/lua/")[2],
   }
   return setmetatable(tbl, VendorTarget)
 end

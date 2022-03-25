@@ -1,4 +1,4 @@
-local ShowError = require("vendorlib.vendor.error_handler").for_show_error()
+local ShowError = require("vendorlib.vendor.misclib.error_handler").for_show_error()
 
 function ShowError.install(plugin_name, path, raw_opts)
   local opts = require("vendorlib.core.option").new(raw_opts)
