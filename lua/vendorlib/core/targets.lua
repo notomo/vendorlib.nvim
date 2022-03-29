@@ -13,18 +13,14 @@ end
 
 function VendorTargets.install(self, ctx, to)
   vim.validate({ ctx = { ctx, "table" } })
-
-  local errs = {}
+  local errs = require("vendorlib.vendor.misclib.multi_error").new()
   for _, target in ipairs(self._targets) do
     local err = target:install(ctx, to)
     if err then
-      table.insert(errs, err)
+      errs:add(err)
     end
   end
-  if #errs > 0 then
-    return table.concat(errs, "\n")
-  end
-  return nil
+  return errs:error()
 end
 
 return VendorTargets
