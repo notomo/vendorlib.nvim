@@ -6,10 +6,13 @@ Specification.__index = Specification
 function Specification.from(path)
   vim.validate({ path = { path, "string" } })
   local raw_targets = dofile(path)
-  local tbl = {
-    _targets = require("vendorlib.core.targets").new(raw_targets),
-  }
-  return setmetatable(tbl, Specification)
+
+  local targets, err = require("vendorlib.core.targets").new(raw_targets)
+  if err then
+    return nil, err
+  end
+  local tbl = { _targets = targets }
+  return setmetatable(tbl, Specification), nil
 end
 
 function Specification.install(self, plugin_name, logger, to)
