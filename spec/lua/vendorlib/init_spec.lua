@@ -5,12 +5,13 @@ describe("vendorlib.install()", function()
   before_each(helper.before_each)
   after_each(helper.after_each)
 
-  it("installs a library", function()
+  it("installs libraries", function()
     local path = vim.fn.tempname()
     local f = io.open(path, "w")
     f:write(([[
 return {
-  "lua/vendorlib/test/data/example.lua"
+  "lua/vendorlib/test/data/example.lua",
+  "lua/vendorlib/test/data/init.lua",
 }
 ]]):format(helper.test_data_dir))
     f:close()
@@ -22,6 +23,7 @@ return {
     })
 
     assert.exists_file("test/vendor/vendorlib/test/data/example.lua")
+    assert.exists_file("test/vendor/vendorlib/test/data/init.lua")
   end)
 
   it("does nothing if no license", function()

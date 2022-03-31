@@ -10,30 +10,15 @@ function VendorTarget.new(raw_target)
     return nil, "not found target: " .. raw_target
   end
 
-  local root = file_path:sub(1, #file_path - #raw_target)
-  local license_path = root .. "LICENSE"
-  local f = io.open(license_path, "r")
-  if not f then
-    return nil, "not found license: " .. license_path
+  local root_path = file_path:sub(1, #file_path - #raw_target)
+  local err = require("vendorlib.core.license").validate(root_path)
+  if err then
+    return nil, err
   end
-
-  local license = f:read("*a")
-  local can_copy = vim.startswith(
-    license,
-    [[Creative Commons Legal Code
-
-CC0 1.0 Universal]]
-  )
-  if not can_copy then
-    return nil, "cannot handle its license: " .. license_path
-  end
-
-  f:close()
 
   local tbl = {
     _file_path = file_path,
     _lua_path = vim.split(file_path, "/lua/")[2],
-    _license_path = license_path,
   }
   return setmetatable(tbl, VendorTarget)
 end
