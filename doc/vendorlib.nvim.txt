@@ -19,7 +19,7 @@ EXAMPLES                                             *vendorlib.nvim-EXAMPLES*
   local f = io.open(vendor_spec_file_path, "w")
   f:write([[
   return {
-    "lua/example/init.lua",
+    "notomo/example_target.nvim/lua/example_target/init.lua",
   }]])
   f:close()
 

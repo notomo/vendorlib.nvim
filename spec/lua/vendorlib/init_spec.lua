@@ -6,14 +6,28 @@ describe("vendorlib.install()", function()
   after_each(helper.after_each)
 
   it("installs libraries", function()
+    vim.opt.packpath:prepend(helper.test_data_dir .. "packages")
+
+    helper.new_directory("packages/pack/test/opt/plugin_name/lua/has_license")
+    helper.new_file(
+      "packages/pack/test/opt/plugin_name/LICENSE",
+      [[
+Creative Commons Legal Code
+
+CC0 1.0 Universal
+]]
+    )
+    helper.new_file("packages/pack/test/opt/plugin_name/lua/has_license/init.lua")
+    helper.new_file("packages/pack/test/opt/plugin_name/lua/has_license/example.lua")
+
     local path = vim.fn.tempname()
     local f = io.open(path, "w")
-    f:write(([[
+    f:write([[
 return {
-  "lua/vendorlib/test/data/example.lua",
-  "lua/vendorlib/test/data/init.lua",
+  "user_name/plugin_name/lua/has_license/example.lua",
+  "user_name/plugin_name/lua/has_license/init.lua"
 }
-]]):format(helper.test_data_dir))
+]])
     f:close()
 
     vendorlib.install("test", path, {
@@ -22,22 +36,23 @@ return {
       end,
     })
 
-    assert.exists_file("test/vendor/vendorlib/test/data/example.lua")
-    assert.exists_file("test/vendor/vendorlib/test/data/init.lua")
+    assert.exists_file("test/vendor/has_license/example.lua")
+    assert.exists_file("test/vendor/has_license/init.lua")
   end)
 
   it("does nothing if no license", function()
-    vim.opt.runtimepath:prepend(helper.test_data_dir .. "root")
-    helper.new_directory("root/lua/no_license")
-    helper.new_file("root/lua/no_license/init.lua")
+    vim.opt.packpath:prepend(helper.test_data_dir .. "packages")
+
+    helper.new_directory("packages/pack/test/opt/plugin_name/lua/no_license")
+    helper.new_file("packages/pack/test/opt/plugin_name/lua/no_license/init.lua")
 
     local path = vim.fn.tempname()
     local f = io.open(path, "w")
-    f:write(([[
+    f:write([[
 return {
-  "lua/no_license/init.lua"
+  "user_name/plugin_name/lua/no_license/init.lua"
 }
-]]):format(helper.test_data_dir))
+]])
     f:close()
 
     vendorlib.install("xxxx", path, {
@@ -45,23 +60,25 @@ return {
         error("unreachable")
       end,
     })
-    --
-    assert.no.exists_file("no_license/init.lua")
+
+    assert.no.exists_file("lua/no_license/init.lua")
+    assert.exists_message("not found license: ")
   end)
 
   it("does nothing if license is not CC0 1.0", function()
-    vim.opt.runtimepath:prepend(helper.test_data_dir .. "root")
-    helper.new_directory("root/lua/other_license")
-    helper.new_file("root/LICENSE")
-    helper.new_file("root/lua/other_license/init.lua")
+    vim.opt.packpath:prepend(helper.test_data_dir .. "packages")
+
+    helper.new_directory("packages/pack/test/opt/plugin_name/lua/other_license")
+    helper.new_file("packages/pack/test/opt/plugin_name/LICENSE")
+    helper.new_file("packages/pack/test/opt/plugin_name/lua/other_license/init.lua")
 
     local path = vim.fn.tempname()
     local f = io.open(path, "w")
-    f:write(([[
+    f:write([[
 return {
-  "lua/other_license/init.lua"
+  "user_name/plugin_name/lua/other_license/init.lua"
 }
-]]):format(helper.test_data_dir))
+]])
     f:close()
 
     vendorlib.install("xxxx", path, {
@@ -69,7 +86,8 @@ return {
         error("unreachable")
       end,
     })
-    --
-    assert.no.exists_file("other_license/init.lua")
+
+    assert.no.exists_file("lua/other_license/init.lua")
+    assert.exists_message("cannot handle its license: ")
   end)
 end)
