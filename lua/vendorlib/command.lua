@@ -9,4 +9,9 @@ function ShowError.install(plugin_name, path, raw_opts)
   return spec:install(plugin_name, opts.logger, opts.to)
 end
 
+function ShowError.add(raw_targets)
+  vim.validate({ targets = { raw_targets, "table" } })
+  return require("vendorlib.core.specification").add(raw_targets)
+end
+
 return ShowError:methods()

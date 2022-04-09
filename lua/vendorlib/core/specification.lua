@@ -20,4 +20,34 @@ function Specification.install(self, plugin_name, logger, to)
   return self._targets:install(ctx, to)
 end
 
+function Specification.add(added)
+  local git = vim.fn.finddir(".git", ".;")
+  if git == "" then
+    return "not found .git"
+  end
+  local root = vim.fn.fnamemodify(git, ":h")
+
+  local spec = vim.fn.glob(root .. "/**/vendorlib.lua")
+  if spec == "" then
+    return "not found vendorlib.lua in " .. root
+  end
+  local path = vim.fn.fnamemodify(spec, ":p")
+
+  local raw_targets = dofile(path)
+  vim.list_extend(raw_targets, added)
+  table.sort(raw_targets, function(a, b)
+    return a < b
+  end)
+  raw_targets = vim.fn.uniq(raw_targets)
+
+  -- HACK: to use formatter on write
+  local bufnr = vim.fn.bufadd(path)
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { "return " .. vim.inspect(raw_targets) })
+  vim.api.nvim_buf_call(bufnr, function()
+    vim.cmd([[write]])
+  end)
+
+  return nil
+end
+
 return Specification

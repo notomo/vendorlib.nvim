@@ -8,4 +8,10 @@ function M.install(plugin_name, path, opts)
   return require("vendorlib.command").install(plugin_name, path, opts)
 end
 
+--- Add modules to specification file.
+--- @param targets string[]: module names
+function M.add(targets)
+  return require("vendorlib.command").add(targets)
+end
+
 return M
