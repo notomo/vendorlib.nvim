@@ -2,7 +2,8 @@ local messagelib = require("vendorlib.vendor.misclib.message")
 
 local M = {}
 
-M.default = {
+local InstallOption = {}
+InstallOption.default = {
   to = function(ctx, module)
     return ("lua/%s/vendor/%s"):format(ctx.plugin_name, module.lua_path)
   end,
@@ -12,11 +13,12 @@ M.default = {
     end,
   },
 }
+M.InstallOption = InstallOption
 
-function M.new(raw_opts)
+function InstallOption.new(raw_opts)
   vim.validate({ raw_opts = { raw_opts, "table", true } })
   raw_opts = raw_opts or {}
-  return vim.tbl_deep_extend("force", M.default, raw_opts)
+  return vim.tbl_deep_extend("force", InstallOption.default, raw_opts)
 end
 
 return M
