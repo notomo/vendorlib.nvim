@@ -1,4 +1,9 @@
 local messagelib = require("vendorlib.vendor.misclib.message")
+local default_logger = {
+  info = function(msg)
+    messagelib.info(msg)
+  end,
+}
 
 local M = {}
 
@@ -7,11 +12,7 @@ InstallOption.default = {
   to = function(ctx, module)
     return ("lua/%s/vendor/%s"):format(ctx.plugin_name, module.lua_path)
   end,
-  logger = {
-    info = function(msg)
-      messagelib.info(msg)
-    end,
-  },
+  logger = default_logger,
 }
 M.InstallOption = InstallOption
 
@@ -24,6 +25,7 @@ end
 local AddOption = {}
 AddOption.default = {
   path = "vendorlib.lua",
+  logger = default_logger,
 }
 M.AddOption = AddOption
 

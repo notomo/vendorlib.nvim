@@ -35,14 +35,22 @@ function Specification.add(added, opts)
     local f = io.open(path, "w")
     f:write([[return {}]])
     f:close()
+    opts.logger.info([[created file: ]] .. path)
   end
 
   local raw_targets = dofile(path)
+
+  added = vim.tbl_filter(function(target)
+    return not vim.tbl_contains(raw_targets, target)
+  end, added)
+  for _, target in ipairs(added) do
+    opts.logger.info([[added: ]] .. target)
+  end
+
   vim.list_extend(raw_targets, added)
   table.sort(raw_targets, function(a, b)
     return a < b
   end)
-  raw_targets = vim.fn.uniq(raw_targets)
 
   -- HACK: to use formatter on write
   local bufnr = vim.fn.bufadd(path)
