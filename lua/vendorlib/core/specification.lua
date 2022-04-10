@@ -20,18 +20,22 @@ function Specification.install(self, plugin_name, logger, to)
   return self._targets:install(ctx, to)
 end
 
-function Specification.add(added)
+function Specification.add(added, opts)
   local git = vim.fn.finddir(".git", ".;")
   if git == "" then
     return "not found .git"
   end
-  local root = vim.fn.fnamemodify(git, ":h")
+  local root = vim.fn.fnamemodify(git, ":p:h:h")
 
-  local spec = vim.fn.glob(root .. "/**/vendorlib.lua")
-  if spec == "" then
-    return "not found vendorlib.lua in " .. root
+  local dir_name = vim.fn.fnamemodify(root, ":t")
+  local plugin_name = vim.split(dir_name, ".", true)[1]
+  local path = root .. "/" .. opts.path:format(plugin_name)
+  if vim.fn.filereadable(path) == 0 then
+    vim.fn.mkdir(vim.fn.fnamemodify(path, ":h"), "p")
+    local f = io.open(path, "w")
+    f:write([[return {}]])
+    f:close()
   end
-  local path = vim.fn.fnamemodify(spec, ":p")
 
   local raw_targets = dofile(path)
   vim.list_extend(raw_targets, added)
@@ -44,7 +48,7 @@ function Specification.add(added)
   local bufnr = vim.fn.bufadd(path)
   vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { "return " .. vim.inspect(raw_targets) })
   vim.api.nvim_buf_call(bufnr, function()
-    vim.cmd([[write]])
+    vim.cmd([[silent write]])
   end)
 
   return nil

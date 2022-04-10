@@ -9,9 +9,10 @@ function ShowError.install(plugin_name, path, raw_opts)
   return spec:install(plugin_name, opts.logger, opts.to)
 end
 
-function ShowError.add(raw_targets)
+function ShowError.add(raw_targets, raw_opts)
   vim.validate({ targets = { raw_targets, "table" } })
-  return require("vendorlib.core.specification").add(raw_targets)
+  local opts = require("vendorlib.core.option").AddOption.new(raw_opts)
+  return require("vendorlib.core.specification").add(raw_targets, opts)
 end
 
 return ShowError:methods()

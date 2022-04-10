@@ -11,11 +11,12 @@ install({plugin_name}, {path}, {opts})                   *vendorlib.install()*
     {path} (string) vendor spec file path
     {opts} (table) TODO
 
-add({targets})                                               *vendorlib.add()*
+add({targets}, {opts})                                       *vendorlib.add()*
   Add modules to specification file.
 
   Parameters: ~
     {targets} (string[]) module names
+    {opts} (table) TODO
 
 ==============================================================================
 EXAMPLES                                             *vendorlib.nvim-EXAMPLES*

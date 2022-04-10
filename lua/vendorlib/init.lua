@@ -10,8 +10,9 @@ end
 
 --- Add modules to specification file.
 --- @param targets string[]: module names
-function M.add(targets)
-  return require("vendorlib.command").add(targets)
+--- @param opts table: TODO
+function M.add(targets, opts)
+  return require("vendorlib.command").add(targets, opts)
 end
 
 return M

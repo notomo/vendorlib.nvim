@@ -91,3 +91,26 @@ return {
     assert.exists_message("cannot handle its license: ")
   end)
 end)
+
+describe("vendorlib.add()", function()
+  before_each(helper.before_each)
+  after_each(helper.after_each)
+
+  it("creates new spec file if the file does not exist", function()
+    vendorlib.add({}, { path = helper.test_data_path .. "vendorlib.lua" })
+    assert.exists_file("vendorlib.lua")
+  end)
+
+  it("adds entries to spec file", function()
+    helper.new_file(
+      "vendorlib.lua",
+      [[
+return {"test2"}
+]]
+    )
+
+    vendorlib.add({ "test1", "test3" }, { path = helper.test_data_path .. "vendorlib.lua" })
+    local actual = dofile(helper.test_data_dir .. "vendorlib.lua")
+    assert.is_same({ "test1", "test2", "test3" }, actual)
+  end)
+end)
