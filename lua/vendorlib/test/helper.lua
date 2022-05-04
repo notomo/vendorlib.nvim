@@ -2,17 +2,13 @@ local plugin_name = vim.split((...):gsub("%.", "/"), "/", true)[1]
 local helper = require("vusted.helper")
 
 helper.root = helper.find_plugin_root(plugin_name)
-helper.packpath = vim.o.packpath
 
 function helper.before_each()
-  vim.o.packpath = helper.packpath
   helper.test_data = require("vendorlib.vendor.misclib.test.data_dir").setup(helper.root)
 end
 
 function helper.after_each()
-  vim.cmd("tabedit")
-  vim.cmd("tabonly!")
-  vim.cmd("silent %bwipeout!")
+  helper.cleanup()
   helper.cleanup_loaded_modules(plugin_name)
   helper.test_data:teardown()
   print(" ")
