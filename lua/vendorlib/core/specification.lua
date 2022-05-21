@@ -55,7 +55,11 @@ function Specification.add(added, opts)
   -- HACK: to use formatter on write
   local bufnr = vim.fn.bufadd(path)
   vim.fn.bufload(bufnr)
-  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { "return " .. vim.inspect(raw_targets) })
+
+  local content = "return " .. vim.inspect(raw_targets):gsub("{", "{\n"):gsub(" }", ",\n}")
+  local lines = vim.split(content, "\n", false)
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+
   vim.api.nvim_buf_call(bufnr, function()
     vim.cmd([[silent write]])
   end)
