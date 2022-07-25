@@ -61,7 +61,7 @@ function Specification.add(added, opts)
   vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 
   vim.api.nvim_buf_call(bufnr, function()
-    vim.cmd([[silent write]])
+    vim.cmd.write({ mods = { silent = true } })
   end)
 
   return nil
