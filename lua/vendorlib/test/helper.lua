@@ -15,6 +15,8 @@ function helper.after_each()
 end
 
 local asserts = require("vusted.assert").asserts
+local asserters = require(plugin_name .. ".vendor.assertlib").list()
+require(plugin_name .. ".vendor.misclib.test.assert").register(asserts.create, asserters)
 
 asserts.create("exists_file"):register(function(self)
   return function(_, args)
@@ -22,21 +24,6 @@ asserts.create("exists_file"):register(function(self)
     self:set_positive(("`%s` not found file"):format(path))
     self:set_negative(("`%s` found file"):format(path))
     return vim.fn.filereadable(path) == 1
-  end
-end)
-
-asserts.create("exists_message"):register(function(self)
-  return function(_, args)
-    local expected = args[1]
-    self:set_positive(("`%s` not found message"):format(expected))
-    self:set_negative(("`%s` found message"):format(expected))
-    local messages = vim.split(vim.api.nvim_exec("messages", true), "\n")
-    for _, msg in ipairs(messages) do
-      if msg:match(expected) then
-        return true
-      end
-    end
-    return false
   end
 end)
 
