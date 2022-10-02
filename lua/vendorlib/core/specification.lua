@@ -52,17 +52,15 @@ function Specification.add(added, opts)
     return a < b
   end)
 
-  -- HACK: to use formatter on write
-  local bufnr = vim.fn.bufadd(path)
-  vim.fn.bufload(bufnr)
+  local indent = "  "
+  local paths = vim.tbl_map(function(target)
+    return ('%s"%s",\n'):format(indent, target)
+  end, raw_targets)
+  local content = "return {\n" .. table.concat(paths, "") .. "}\n"
 
-  local content = "return " .. vim.inspect(raw_targets):gsub("{", "{\n"):gsub(" }", ",\n}")
-  local lines = vim.split(content, "\n", false)
-  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-
-  vim.api.nvim_buf_call(bufnr, function()
-    vim.cmd.write({ mods = { silent = true } })
-  end)
+  local f = io.open(path, "w")
+  f:write(content)
+  f:close()
 
   return nil
 end
