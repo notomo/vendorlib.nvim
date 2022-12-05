@@ -21,7 +21,7 @@ add({targets}, {opts})                                       *vendorlib.add()*
 ==============================================================================
 EXAMPLES                                             *vendorlib.nvim-EXAMPLES*
 
->
+>lua
   local vendor_spec_file_path = vim.fn.tempname()
   local f = io.open(vendor_spec_file_path, "w")
   f:write([[
