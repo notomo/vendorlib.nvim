@@ -55,14 +55,17 @@ return {
 ]])
     f:close()
 
-    vendorlib.install("xxxx", path, {
-      to = function()
-        error("unreachable")
-      end,
-    })
+    local ok, err = pcall(function()
+      vendorlib.install("xxxx", path, {
+        to = function()
+          error("unreachable")
+        end,
+      })
+    end)
+    assert.is_false(ok)
 
     assert.no.exists_file("lua/no_license/init.lua")
-    assert.exists_message("not found license: ")
+    assert.match("not found license: ", err)
   end)
 
   it("does nothing if license is not CC0 1.0", function()
@@ -81,14 +84,17 @@ return {
 ]])
     f:close()
 
-    vendorlib.install("xxxx", path, {
-      to = function()
-        error("unreachable")
-      end,
-    })
+    local ok, err = pcall(function()
+      vendorlib.install("xxxx", path, {
+        to = function()
+          error("unreachable")
+        end,
+      })
+    end)
+    assert.is_false(ok)
 
     assert.no.exists_file("lua/other_license/init.lua")
-    assert.exists_message("cannot handle its license: ")
+    assert.match("cannot handle its license: ", err)
   end)
 end)
 
