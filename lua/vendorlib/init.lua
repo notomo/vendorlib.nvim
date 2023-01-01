@@ -7,7 +7,7 @@ local M = {}
 function M.install(plugin_name, path, opts)
   local err = require("vendorlib.command").install(plugin_name, path, opts)
   if err then
-    error("[vendorlib] " .. err, 0)
+    require("vendorlib.vendor.misclib.message").error(err)
   end
 end
 
@@ -17,7 +17,7 @@ end
 function M.add(targets, opts)
   local err = require("vendorlib.command").add(targets, opts)
   if err then
-    error("[vendorlib] " .. err, 0)
+    require("vendorlib.vendor.misclib.message").error(err)
   end
 end
 
