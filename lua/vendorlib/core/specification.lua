@@ -28,7 +28,7 @@ function Specification.add(added, opts)
   local root = vim.fn.fnamemodify(git, ":p:h:h")
 
   local dir_name = vim.fn.fnamemodify(root, ":t")
-  local plugin_name = vim.split(dir_name, ".", true)[1]
+  local plugin_name = vim.split(dir_name, ".", { plain = true })[1]
   local path = root .. "/" .. opts.path:format(plugin_name)
   if vim.fn.filereadable(path) == 0 then
     vim.fn.mkdir(vim.fn.fnamemodify(path, ":h"), "p")

@@ -6,7 +6,7 @@ function VendorTarget.new(raw_target)
     raw_target = { raw_target, { "string" } },
   })
 
-  local parts = vim.split(raw_target, "/", true)
+  local parts = vim.split(raw_target, "/", { plain = true })
   local plugin_name = parts[2]
   local ok, packadd_err = pcall(vim.cmd, [[packadd ]] .. plugin_name)
   if not ok then
