@@ -1,6 +1,6 @@
 # vendorlib.nvim
 
-WIP
+This is a plugin to copy from local installed plugin files to another.
 
 ## Example
 

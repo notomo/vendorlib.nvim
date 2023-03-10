@@ -9,14 +9,34 @@ install({plugin_name}, {path}, {opts})                   *vendorlib.install()*
   Parameters: ~
     {plugin_name} (string) plugin name (used as `lua/{plugin_name}` directory name)
     {path} (string) vendor spec file path
-    {opts} (table) TODO
+    {opts} (VendorlibInstallOption?) |VendorlibInstallOption|
 
 add({targets}, {opts})                                       *vendorlib.add()*
   Add modules to specification file.
 
   Parameters: ~
     {targets} (string[]) module names
-    {opts} (table) TODO
+    {opts} (VendorlibAddOption?) |VendorlibAddOption|
+
+==============================================================================
+STRUCTURE                                           *vendorlib.nvim-STRUCTURE*
+
+VendorlibInstallOption                                *VendorlibInstallOption*
+
+- {to} ((fun(ctx:VendorlibInstallContext,module:VendorlibInstallModuleInfo):string)?) returns file path to install the module (default: `lua/{ctx.plugin_name}/vendor/{module.lua_path}`)
+
+VendorlibInstallContext                              *VendorlibInstallContext*
+
+- {plugin_name} (string) |vendorlib.install()|'s parameter {plugin_name}
+
+VendorlibInstallModuleInfo                        *VendorlibInstallModuleInfo*
+
+- {file_path} (string)
+- {lua_path} (string) `/lua/{lua_path}`
+
+VendorlibAddOption                                        *VendorlibAddOption*
+
+- {path} (string?) specification file output path
 
 ==============================================================================
 EXAMPLES                                             *vendorlib.nvim-EXAMPLES*
