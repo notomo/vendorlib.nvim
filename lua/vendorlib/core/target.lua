@@ -50,7 +50,7 @@ function VendorTarget.install(self, ctx, to)
     return ("failed to mkdir: `%s`"):format(dir)
   end
 
-  local copied = vim.loop.fs_copyfile(self._file_path, path)
+  local copied = vim.uv.fs_copyfile(self._file_path, path)
   if copied ~= true then
     return ("failed to copy file: `%s` to `%s`"):format(self._file_path, path)
   end
