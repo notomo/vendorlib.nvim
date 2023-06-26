@@ -19,7 +19,7 @@ require(plugin_name .. ".vendor.misclib.test.assert").register(asserts.create, a
 
 asserts.create("exists_file"):register(function(self)
   return function(_, args)
-    local path = helper.test_data.full_path .. args[1]
+    local path = helper.test_data:path(args[1])
     self:set_positive(("`%s` not found file"):format(path))
     self:set_negative(("`%s` found file"):format(path))
     return vim.fn.filereadable(path) == 1

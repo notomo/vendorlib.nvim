@@ -6,7 +6,7 @@ describe("vendorlib.install()", function()
   after_each(helper.after_each)
 
   it("installs libraries", function()
-    vim.opt.packpath:prepend(helper.test_data.full_path .. "packages")
+    vim.opt.packpath:prepend(helper.test_data:path("packages"))
 
     helper.test_data:create_file(
       "packages/pack/test/opt/plugin_name/LICENSE",
@@ -31,7 +31,7 @@ return {
 
     vendorlib.install("test", path, {
       to = function(ctx, module)
-        return helper.test_data.full_path .. ("%s/vendor/%s"):format(ctx.plugin_name, module.lua_path)
+        return helper.test_data:path(("%s/vendor/%s"):format(ctx.plugin_name, module.lua_path))
       end,
     })
 
@@ -40,7 +40,7 @@ return {
   end)
 
   it("does nothing if no license", function()
-    vim.opt.packpath:prepend(helper.test_data.full_path .. "packages")
+    vim.opt.packpath:prepend(helper.test_data:path("packages"))
 
     helper.test_data:create_file("packages/pack/test/opt/plugin_name/lua/no_license/init.lua")
 
@@ -67,7 +67,7 @@ return {
   end)
 
   it("does nothing if license is not CC0 1.0", function()
-    vim.opt.packpath:prepend(helper.test_data.full_path .. "packages")
+    vim.opt.packpath:prepend(helper.test_data:path("packages"))
 
     helper.test_data:create_file("packages/pack/test/opt/plugin_name/LICENSE")
     helper.test_data:create_file("packages/pack/test/opt/plugin_name/lua/other_license/init.lua")
@@ -100,7 +100,7 @@ describe("vendorlib.add()", function()
   after_each(helper.after_each)
 
   it("creates new spec file if the file does not exist", function()
-    vendorlib.add({}, { path = helper.test_data.relative_path .. "vendorlib.lua" })
+    vendorlib.add({}, { path = helper.test_data:relative_path("vendorlib.lua") })
     assert.exists_file("vendorlib.lua")
   end)
 
@@ -112,8 +112,8 @@ return {"test2"}
 ]]
     )
 
-    vendorlib.add({ "test1", "test3" }, { path = helper.test_data.relative_path .. "vendorlib.lua" })
-    local actual = dofile(helper.test_data.full_path .. "vendorlib.lua")
+    vendorlib.add({ "test1", "test3" }, { path = helper.test_data:relative_path("vendorlib.lua") })
+    local actual = dofile(helper.test_data:path("vendorlib.lua"))
     assert.is_same({ "test1", "test2", "test3" }, actual)
   end)
 end)
