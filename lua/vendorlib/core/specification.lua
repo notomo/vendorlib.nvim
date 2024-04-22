@@ -40,9 +40,12 @@ function Specification.add(added, opts)
 
   local raw_targets = dofile(path)
 
-  added = vim.tbl_filter(function(target)
-    return not vim.tbl_contains(raw_targets, target)
-  end, added)
+  added = vim
+    .iter(added)
+    :filter(function(target)
+      return not vim.tbl_contains(raw_targets, target)
+    end)
+    :totable()
   for _, target in ipairs(added) do
     opts.logger.info([[added: ]] .. target)
   end
