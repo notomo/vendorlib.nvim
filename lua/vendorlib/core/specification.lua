@@ -56,9 +56,12 @@ function Specification.add(added, opts)
   end)
 
   local indent = "  "
-  local paths = vim.tbl_map(function(target)
-    return ('%s"%s",\n'):format(indent, target)
-  end, raw_targets)
+  local paths = vim
+    .iter(raw_targets)
+    :map(function(target)
+      return ('%s"%s",\n'):format(indent, target)
+    end)
+    :totable()
   local content = "return {\n" .. table.concat(paths, "") .. "}\n"
 
   local f = io.open(path, "w")
