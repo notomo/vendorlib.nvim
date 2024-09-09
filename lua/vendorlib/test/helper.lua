@@ -26,4 +26,11 @@ asserts.create("exists_file"):register(function(self)
   end
 end)
 
+function helper.typed_assert(assert)
+  local x = require("assertlib").typed(assert)
+  ---@cast x +{exists_file:fun(path)}
+  ---@cast x +{no:{exists_file:fun(path)}}
+  return x
+end
+
 return helper

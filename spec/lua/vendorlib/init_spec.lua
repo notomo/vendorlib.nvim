@@ -1,5 +1,6 @@
 local helper = require("vendorlib.test.helper")
 local vendorlib = helper.require("vendorlib")
+local assert = helper.typed_assert(assert)
 
 describe("vendorlib.install()", function()
   before_each(helper.before_each)
@@ -21,6 +22,7 @@ CC0 1.0 Universal
 
     local path = vim.fn.tempname()
     local f = io.open(path, "w")
+    assert(f)
     f:write([[
 return {
   "user_name/plugin_name/lua/has_license/example.lua",
@@ -46,6 +48,7 @@ return {
 
     local path = vim.fn.tempname()
     local f = io.open(path, "w")
+    assert(f)
     f:write([[
 return {
   "user_name/plugin_name/lua/no_license/init.lua"
@@ -74,6 +77,7 @@ return {
 
     local path = vim.fn.tempname()
     local f = io.open(path, "w")
+    assert(f)
     f:write([[
 return {
   "user_name/plugin_name/lua/other_license/init.lua"
@@ -114,6 +118,6 @@ return {"test2"}
 
     vendorlib.add({ "test1", "test3" }, { path = helper.test_data:relative_path("vendorlib.lua") })
     local actual = dofile(helper.test_data:path("vendorlib.lua"))
-    assert.is_same({ "test1", "test2", "test3" }, actual)
+    assert.same({ "test1", "test2", "test3" }, actual)
   end)
 end)
