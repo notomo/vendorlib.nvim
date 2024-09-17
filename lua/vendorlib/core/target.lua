@@ -8,7 +8,9 @@ function VendorTarget.new(raw_target)
 
   local parts = vim.split(raw_target, "/", { plain = true })
   local plugin_name = parts[2]
-  local ok, packadd_err = pcall(vim.cmd, [[packadd ]] .. plugin_name)
+  local ok, packadd_err = pcall(function()
+    vim.cmd.packadd(plugin_name)
+  end)
   if not ok then
     return nil, packadd_err
   end

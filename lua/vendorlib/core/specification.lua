@@ -9,10 +9,10 @@ function Specification.from(path)
 
   local targets, err = require("vendorlib.core.targets").new(raw_targets)
   if err then
-    return nil, err
+    return err
   end
   local tbl = { _targets = targets }
-  return setmetatable(tbl, Specification), nil
+  return setmetatable(tbl, Specification)
 end
 
 function Specification.install(self, plugin_name, logger, to)
@@ -33,6 +33,9 @@ function Specification.add(added, opts)
   if vim.fn.filereadable(path) == 0 then
     vim.fn.mkdir(vim.fn.fnamemodify(path, ":h"), "p")
     local f = io.open(path, "w")
+    if not f then
+      return "cannot open file" .. path
+    end
     f:write([[return {}]])
     f:close()
     opts.logger.info([[created file: ]] .. path)
@@ -65,6 +68,9 @@ function Specification.add(added, opts)
   local content = "return {\n" .. table.concat(paths, "") .. "}\n"
 
   local f = io.open(path, "w")
+  if not f then
+    return "cannot open file" .. path
+  end
   f:write(content)
   f:close()
 
