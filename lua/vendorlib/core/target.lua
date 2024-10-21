@@ -1,11 +1,8 @@
 local VendorTarget = {}
 VendorTarget.__index = VendorTarget
 
+--- @param raw_target string
 function VendorTarget.new(raw_target)
-  vim.validate({
-    raw_target = { raw_target, { "string" } },
-  })
-
   local parts = vim.split(raw_target, "/", { plain = true })
   local plugin_name = parts[2]
   local ok, packadd_err = pcall(function()
@@ -35,12 +32,9 @@ function VendorTarget.new(raw_target)
   return setmetatable(tbl, VendorTarget)
 end
 
+--- @param ctx table
+--- @param to function
 function VendorTarget.install(self, ctx, to)
-  vim.validate({
-    ctx = { ctx, "table" },
-    to = { to, "function" },
-  })
-
   local path = to(ctx, {
     file_path = self._file_path,
     lua_path = self._lua_path,

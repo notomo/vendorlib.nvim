@@ -1,9 +1,8 @@
 local VendorTargets = {}
 VendorTargets.__index = VendorTargets
 
+--- @param raw_targets string[]
 function VendorTargets.new(raw_targets)
-  vim.validate({ raw_targets = { raw_targets, "table" } })
-
   local targets = {}
   local errs = require("vendorlib.vendor.misclib.multi_error").new()
   for _, raw_target in ipairs(raw_targets) do
@@ -23,8 +22,8 @@ function VendorTargets.new(raw_targets)
   return setmetatable(tbl, VendorTargets), nil
 end
 
+--- @param ctx table
 function VendorTargets.install(self, ctx, to)
-  vim.validate({ ctx = { ctx, "table" } })
   local errs = require("vendorlib.vendor.misclib.multi_error").new()
   for _, target in ipairs(self._targets) do
     local err = target:install(ctx, to)

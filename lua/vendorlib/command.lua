@@ -10,8 +10,9 @@ function M.install(plugin_name, path, raw_opts)
   return spec:install(plugin_name, opts.logger, opts.to)
 end
 
+--- @param raw_targets string[]
+--- @param raw_opts table?
 function M.add(raw_targets, raw_opts)
-  vim.validate({ targets = { raw_targets, "table" } })
   local opts = require("vendorlib.core.option").AddOption.new(raw_opts)
   return require("vendorlib.core.specification").add(raw_targets, opts)
 end

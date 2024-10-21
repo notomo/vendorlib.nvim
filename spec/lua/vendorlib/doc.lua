@@ -5,6 +5,7 @@ local full_plugin_name = plugin_name .. ".nvim"
 local example_path = ("./spec/lua/%s/example.lua"):format(plugin_name)
 
 require("genvdoc").generate(full_plugin_name, {
+  source = { patterns = { ("lua/%s/init.lua"):format(plugin_name) } },
   chapters = {
     {
       name = function(group)

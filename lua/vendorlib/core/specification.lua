@@ -3,8 +3,8 @@ local Context = require("vendorlib.core.context")
 local Specification = {}
 Specification.__index = Specification
 
+--- @param path string
 function Specification.from(path)
-  vim.validate({ path = { path, "string" } })
   local raw_targets = dofile(path)
 
   local targets, err = require("vendorlib.core.targets").new(raw_targets)
