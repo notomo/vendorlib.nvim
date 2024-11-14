@@ -1,7 +1,6 @@
-local messagelib = require("vendorlib.vendor.misclib.message")
 local default_logger = {
   info = function(msg)
-    messagelib.info(msg)
+    vim.notify("[vendorlib] " .. msg)
   end,
 }
 
