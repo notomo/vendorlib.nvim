@@ -9,19 +9,19 @@ function VendorTarget.new(raw_target)
     vim.cmd.packadd(plugin_name)
   end)
   if not ok then
-    return nil, packadd_err
+    return packadd_err
   end
   local pattern = table.concat(vim.list_slice(parts, 3), "/")
 
   local file_path = vim.api.nvim_get_runtime_file(pattern, false)[1]
   if not file_path then
-    return nil, "not found target: " .. raw_target
+    return "not found target: " .. raw_target
   end
 
   local root_path = file_path:sub(1, #file_path - #pattern)
   local err = require("vendorlib.core.license").validate(root_path)
   if err then
-    return nil, err
+    return err
   end
 
   local tbl = {

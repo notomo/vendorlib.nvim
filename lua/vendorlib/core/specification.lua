@@ -7,8 +7,9 @@ Specification.__index = Specification
 function Specification.from(path)
   local raw_targets = dofile(path)
 
-  local targets, err = require("vendorlib.core.targets").new(raw_targets)
-  if err then
+  local targets = require("vendorlib.core.targets").new(raw_targets)
+  if type(targets) == "string" then
+    local err = targets
     return err
   end
   local tbl = { _targets = targets }

@@ -6,8 +6,9 @@ function VendorTargets.new(raw_targets)
   local targets = {}
   local errs = require("vendorlib.vendor.misclib.multi_error").new()
   for _, raw_target in ipairs(raw_targets) do
-    local target, err = require("vendorlib.core.target").new(raw_target)
-    if err then
+    local target = require("vendorlib.core.target").new(raw_target)
+    if type(target) == "string" then
+      local err = target
       errs:add(err)
     else
       table.insert(targets, target)
@@ -15,11 +16,11 @@ function VendorTargets.new(raw_targets)
   end
   local err = errs:error()
   if err then
-    return nil, err
+    return err
   end
 
   local tbl = { _targets = targets }
-  return setmetatable(tbl, VendorTargets), nil
+  return setmetatable(tbl, VendorTargets)
 end
 
 --- @param ctx table
