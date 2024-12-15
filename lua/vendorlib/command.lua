@@ -2,12 +2,7 @@ local M = {}
 
 function M.install(plugin_name, path, raw_opts)
   local opts = require("vendorlib.core.option").InstallOption.new(raw_opts)
-  local spec = require("vendorlib.core.specification").from(path)
-  if type(spec) == "string" then
-    local err = spec
-    return err
-  end
-  return spec:install(plugin_name, opts.logger, opts.to)
+  return require("vendorlib.core.specification").install(path, plugin_name, opts.logger, opts.to)
 end
 
 --- @param raw_targets string[]

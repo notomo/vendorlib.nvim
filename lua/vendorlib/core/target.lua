@@ -1,8 +1,9 @@
 local VendorTarget = {}
-VendorTarget.__index = VendorTarget
 
 --- @param raw_target string
-function VendorTarget.new(raw_target)
+--- @param ctx table
+--- @param to function
+function VendorTarget.install(raw_target, ctx, to)
   local parts = vim.split(raw_target, "/", { plain = true })
   local plugin_name = parts[2]
   local ok, packadd_err = pcall(function()
@@ -24,34 +25,22 @@ function VendorTarget.new(raw_target)
     return err
   end
 
-  local tbl = {
-    _file_path = file_path,
-    _lua_path = vim.split(file_path, "/lua/")[2],
-    _target = raw_target,
-  }
-  return setmetatable(tbl, VendorTarget)
-end
-
---- @param ctx table
---- @param to function
-function VendorTarget.install(self, ctx, to)
   local path = to(ctx, {
-    file_path = self._file_path,
-    lua_path = self._lua_path,
+    file_path = file_path,
+    lua_path = vim.split(file_path, "/lua/")[2],
   })
 
-  local dir = vim.fn.fnamemodify(path, ":h")
-  local ok = vim.fn.mkdir(dir, "p")
-  if ok ~= 1 then
+  local dir = vim.fs.dirname(path)
+  if vim.fn.mkdir(dir, "p") ~= 1 then
     return ("failed to mkdir: `%s`"):format(dir)
   end
 
-  local copied = vim.uv.fs_copyfile(self._file_path, path)
+  local copied = vim.uv.fs_copyfile(file_path, path)
   if copied ~= true then
-    return ("failed to copy file: `%s` to `%s`"):format(self._file_path, path)
+    return ("failed to copy file: `%s` to `%s`"):format(file_path, path)
   end
 
-  ctx.logger.info("installed: " .. self._target)
+  ctx.logger.info("installed: " .. raw_target)
 
   return nil
 end

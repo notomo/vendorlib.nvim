@@ -1,38 +1,33 @@
 local Context = require("vendorlib.core.context")
 
 local Specification = {}
-Specification.__index = Specification
 
 --- @param path string
-function Specification.from(path)
+function Specification.install(path, plugin_name, logger, to)
   local raw_targets = dofile(path)
-
-  local targets = require("vendorlib.core.targets").new(raw_targets)
-  if type(targets) == "string" then
-    local err = targets
-    return err
-  end
-  local tbl = { _targets = targets }
-  return setmetatable(tbl, Specification)
-end
-
-function Specification.install(self, plugin_name, logger, to)
   local ctx = Context.new(plugin_name, logger)
-  return self._targets:install(ctx, to)
+
+  local errs = require("vendorlib.vendor.misclib.multi_error").new()
+  for _, raw_target in ipairs(raw_targets) do
+    local err = require("vendorlib.core.target").install(raw_target, ctx, to)
+    if err then
+      errs:add(err)
+    end
+  end
+  return errs:error()
 end
 
 function Specification.add(added, opts)
-  local git = vim.fn.finddir(".git", ".;")
-  if git == "" then
+  local root = vim.fs.root(".", { ".git" })
+  if not root then
     return "not found .git"
   end
-  local root = vim.fn.fnamemodify(git, ":p:h:h")
 
-  local dir_name = vim.fn.fnamemodify(root, ":t")
+  local dir_name = vim.fs.basename(root)
   local plugin_name = vim.split(dir_name, ".", { plain = true })[1]
-  local path = root .. "/" .. opts.path:format(plugin_name)
+  local path = vim.fs.joinpath(root, opts.path:format(plugin_name))
   if vim.fn.filereadable(path) == 0 then
-    vim.fn.mkdir(vim.fn.fnamemodify(path, ":h"), "p")
+    vim.fn.mkdir(vim.fs.dirname(path), "p")
     local f = io.open(path, "w")
     if not f then
       return "cannot open file" .. path
