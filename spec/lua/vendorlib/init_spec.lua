@@ -106,7 +106,7 @@ describe("vendorlib.add()", function()
   after_each(helper.after_each)
 
   it("creates new spec file if the file does not exist", function()
-    vendorlib.add({}, { path = helper.test_data:relative_path("vendorlib.lua") })
+    vendorlib.add({}, { path = vim.fs.relpath(helper.root, helper.test_data:path("vendorlib.lua")) })
     assert.exists_file("vendorlib.lua")
   end)
 
@@ -118,7 +118,7 @@ return {"test2"}
 ]]
     )
 
-    vendorlib.add({ "test1", "test3" }, { path = helper.test_data:relative_path("vendorlib.lua") })
+    vendorlib.add({ "test1", "test3" }, { path = vim.fs.relpath(helper.root, helper.test_data:path("vendorlib.lua")) })
     local actual = dofile(helper.test_data:path("vendorlib.lua"))
     assert.same({ "test1", "test2", "test3" }, actual)
   end)
