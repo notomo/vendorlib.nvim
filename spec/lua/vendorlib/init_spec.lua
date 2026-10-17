@@ -9,7 +9,7 @@ describe("vendorlib.install()", function()
   after_each(helper.after_each)
 
   it("installs libraries", function()
-    vim.opt.packpath:prepend(helper.test_data:path("packages"))
+    vim.api.nvim_set_option_value("packpath", helper.test_data:path("packages"), { operation = "prepend" })
 
     helper.test_data:create_file(
       "packages/pack/test/opt/plugin_name/LICENSE",
@@ -44,7 +44,7 @@ return {
   end)
 
   it("does nothing if no license", function()
-    vim.opt.packpath:prepend(helper.test_data:path("packages"))
+    vim.api.nvim_set_option_value("packpath", helper.test_data:path("packages"), { operation = "prepend" })
 
     helper.test_data:create_file("packages/pack/test/opt/plugin_name/lua/no_license/init.lua")
 
@@ -72,7 +72,7 @@ return {
   end)
 
   it("does nothing if license is not CC0 1.0", function()
-    vim.opt.packpath:prepend(helper.test_data:path("packages"))
+    vim.api.nvim_set_option_value("packpath", helper.test_data:path("packages"), { operation = "prepend" })
 
     helper.test_data:create_file("packages/pack/test/opt/plugin_name/LICENSE")
     helper.test_data:create_file("packages/pack/test/opt/plugin_name/lua/other_license/init.lua")
